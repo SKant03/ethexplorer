@@ -22,6 +22,12 @@ export async function fetchBlockByNumber(blockHex: string) {
     timestamp: parseInt(block.timestamp, 16) * 1000,
   };
 }
+export async function fetchBlockByNumber2(blockHex: string) {
+  const block = await rpc<any>("eth_getBlockByNumber", [blockHex, true]);
+
+  return block
+}
+
 
 // Fetch latest block number
 export async function fetchLatestBlockNumber(): Promise<number> {
