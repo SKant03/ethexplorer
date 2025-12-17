@@ -41,3 +41,16 @@ export async function fetchLatestBlock() {
   const hex = "0x" + latestBlockNumber.toString(16);
   return fetchBlockByNumber(hex);
 }
+
+
+export async function fetchTransactionByHash(txHash: string) {
+  const block = await rpc<any>("eth_getTransactionByHash", [txHash]);
+
+  return block;
+}
+
+export async function fetchTransactionReceipt(txHash: string) {
+  const block = await rpc<any>("eth_getTransactionReceipt", [txHash]);
+
+  return block;
+}
