@@ -6,6 +6,7 @@ import clsx from "clsx";
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
+import Row from "@/components/Row";
 import {
   fetchTransactionByHash,
   fetchTransactionReceipt,
@@ -63,7 +64,6 @@ export default function Transaction() {
           <Row
             label="Status"
             value={receipt.status === "0x1" ? "Success" : "Failed"}
-            isDark={isDark}
           />
           <Row
             label="Block"
@@ -75,30 +75,16 @@ export default function Transaction() {
                 {parseInt(tx.blockNumber ?? "0x0", 16)}
               </Link>
             }
-            isDark={isDark}
           />
           <Row
             label="From"
             value={<span className="font-mono">{tx.from}</span>}
-            isDark={isDark}
           />
-          <Row
-            label="To"
-            value={<span className="font-mono">{tx.to}</span>}
-            isDark={isDark}
-          />
-          <Row label="Value" value={`${valueEth} ETH`} isDark={isDark} />
-          <Row
-            label="Gas Used"
-            value={gasUsed.toLocaleString()}
-            isDark={isDark}
-          />
-          <Row label="Gas Price" value={`${gasPrice} wei`} isDark={isDark} />
-          <Row
-            label="Nonce"
-            value={parseInt(tx.nonce ?? "0x0", 16)}
-            isDark={isDark}
-          />
+          <Row label="To" value={<span className="font-mono">{tx.to}</span>} />
+          <Row label="Value" value={`${valueEth} ETH`} />
+          <Row label="Gas Used" value={gasUsed.toLocaleString()} />
+          <Row label="Gas Price" value={`${gasPrice} wei`} />
+          <Row label="Nonce" value={parseInt(tx.nonce ?? "0x0", 16)} />
         </div>
 
         {/* Show More / Extra Details */}
@@ -127,22 +113,18 @@ export default function Transaction() {
               <Row
                 label="Transaction Hash"
                 value={<span className="font-mono break-all">{tx.hash}</span>}
-                isDark={isDark}
               />
               <Row
                 label="Input Data"
                 value={<span className="font-mono break-all">{tx.input}</span>}
-                isDark={isDark}
               />
               <Row
                 label="Transaction Index"
                 value={parseInt(tx.transactionIndex ?? "0x0", 16)}
-                isDark={isDark}
               />
               <Row
                 label="Cumulative Gas Used"
                 value={parseInt(receipt.cumulativeGasUsed ?? "0x0", 16)}
-                isDark={isDark}
               />
               <Row
                 label="Contract Address"
@@ -151,43 +133,10 @@ export default function Transaction() {
                     {receipt.contractAddress ?? "-"}
                   </span>
                 }
-                isDark={isDark}
               />
             </div>
           )}
         </div>
-      </div>
-    </div>
-  );
-}
-
-// Key-value row
-function Row({
-  label,
-  value,
-  isDark,
-}: {
-  label: string;
-  value: React.ReactNode;
-  isDark?: boolean;
-}) {
-  return (
-    <div
-      className={clsx(
-        "grid grid-cols-2 gap-4 py-1 text-sm",
-        isDark ? "border-b border-slate-700" : "border-b border-slate-200"
-      )}
-    >
-      <div className={clsx(isDark ? "text-slate-300" : "text-slate-800")}>
-        {label}
-      </div>
-      <div
-        className={clsx(
-          isDark ? "text-slate-300" : "text-slate-800",
-          "text-right"
-        )}
-      >
-        {value}
       </div>
     </div>
   );

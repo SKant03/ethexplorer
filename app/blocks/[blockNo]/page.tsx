@@ -6,6 +6,7 @@ import clsx from "clsx";
 import { useParams } from "next/navigation";
 import { fetchBlockByNumber2 } from "@/lib/queries/queries";
 import { useQuery } from "@tanstack/react-query";
+import Row from "@/components/Row";
 
 export default function Block({ chainId }: { chainId: number }) {
   const { blockNo } = useParams<{ blockNo: string }>();
@@ -64,7 +65,7 @@ export default function Block({ chainId }: { chainId: number }) {
             value={`${block.transactions.length} txns`}
           />
           <Row label="Withdrawals" value={block.withdrawals?.length ?? 0} />
-          <Row label="Fee Recipient" value={block.miner} isDark={isDark} />
+          <Row label="Fee Recipient" value={block.miner} />
           <Row
             label="Block Reward"
             value={`${(parseInt(block.reward ?? "0x0", 16) / 1e18).toFixed(
@@ -123,46 +124,14 @@ export default function Block({ chainId }: { chainId: number }) {
                   : "border-slate-200 bg-gray-50"
               )}
             >
-              <Row label="Hash" value={block.hash} isDark={isDark} />
+              <Row label="Hash" value={block.hash} />
               <Row label="Parent Hash" value={block.parentHash} />
-              <Row label="State Root" value={block.stateRoot} isDark={isDark} />
+              <Row label="State Root" value={block.stateRoot} />
               <Row label="Withdrawals Root" value={block.withdrawalsRoot} />
-              <Row label="Nonce" value={block.nonce} isDark={isDark} />
+              <Row label="Nonce" value={block.nonce} />
             </div>
           )}
         </div>
-      </div>
-    </div>
-  );
-}
-
-// Label-value row
-function Row({
-  label,
-  value,
-}: {
-  label: string;
-  value: React.ReactNode;
-  isDark?: boolean;
-}) {
-  const isDark = useIsDark();
-  return (
-    <div
-      className={clsx(
-        "grid grid-cols-2 gap-4 py-1 text-sm",
-        isDark ? "border-b border-slate-700" : "border-b border-slate-200"
-      )}
-    >
-      <div className={clsx(isDark ? "text-slate-300" : "text-slate-800")}>
-        {label}
-      </div>
-      <div
-        className={clsx(
-          isDark ? "text-slate-300" : "text-slate-800",
-          "text-right"
-        )}
-      >
-        {value}
       </div>
     </div>
   );
