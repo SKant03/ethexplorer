@@ -2,12 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import TableHead from "../common/TableHead";
+import TableHead from "../../components/TableHead";
 import {
   fetchLatestBlockNumber,
   fetchBlockByNumber,
-} from "@/lib/queries/getLatestBlock";
-import BlockRow from "./BlockRow";
+} from "@/lib/queries/queries";
+import BlockRow from "../../components/BlockRow";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 
 const PAGE_SIZE = 10;
 
@@ -18,10 +19,10 @@ export default function Block() {
   const { data: latestBlockNumber } = useQuery({
     queryKey: ["latestBlockNumber"],
     queryFn: fetchLatestBlockNumber,
-    // refetchInterval: page === 1 ? 5000 : false,       //uncomment this line to start the live fetch
+    // refetchInterval: page === 1 ? 10000 : false, //uncomment this line to start the live fetch
   });
 
-  const { data: blocks = [] } = useQuery({
+  const { data: blocks = [], isLoading: isListReady } = useQuery({
     queryKey: ["blocks", page],
     queryFn: async () => {
       if (!latestBlockNumber) return [];
@@ -44,7 +45,7 @@ export default function Block() {
   });
 
   useEffect(() => {
-    if (page !== 1 || !latestBlockNumber) return;  
+    if (page !== 1 || !latestBlockNumber) return;
 
     const hex = "0x" + latestBlockNumber.toString(16);
 
@@ -59,33 +60,47 @@ export default function Block() {
     });
   }, [latestBlockNumber, page, queryClient]);
 
-  const isListReady = Array.isArray(blocks) && blocks.length === PAGE_SIZE;
-
   return (
     <div>
-      <TableHead columns={[{title:"Block", className:"w-3/12"},{ title:"Time", className:"w-2/12"},{ title: "Miner", className:"w-6/12"},{ title:"Total Tx", className:"w-1/12"}]} />
+      <TableHead
+        columns={[
+          { title: "Block", className: "w-3/12" },
+          { title: "Time", className: "w-2/12" },
+          { title: "Miner", className: "w-6/12" },
+          { title: "Total Tx", className: "w-1/12" },
+        ]}
+      />
 
       {/* Skeleton / Loader */}
-      {!isListReady &&
-        Array.from({ length: PAGE_SIZE }).map((_, i) => (
-          <div
-            key={i}
-            className="h-10 bg-gray-200 animate-pulse mb-2 rounded"
-          ></div>
-        ))}
+      {isListReady && (
+        <div className="flex justify-center">
+          <div className="h-10 bg-gray-200 animate-pulse mb-2 rounded w-full max-w-6xl"></div>
+        </div>
+      )}
 
       {/* Render only when full list is ready */}
-      {isListReady &&
-        blocks.map((block) => (
-          <BlockRow blockRow={{blockNo:block.number,time:`${Math.floor((Date.now() - block.timestamp) / 1000)}s ago`,miner:block.miner,tx:block.txCount}} />
+      {!isListReady &&
+        blocks.map((block, index) => (
+          <BlockRow
+            key={index}
+            blockRow={{
+              blockNo: block.number,
+              time: `${Math.floor((Date.now() - block.timestamp) / 1000)}s ago`,
+              miner: block.miner,
+              tx: block.txCount,
+            }}
+          />
         ))}
 
       {/* Pagination */}
-      <div className="flex gap-2 mt-4">
+      <div className="flex justify-center gap-2 mt-4">
         <button disabled={page === 1} onClick={() => setPage((p) => p - 1)}>
-          Prev
+          <ArrowLeft size={25} />
         </button>
-        <button onClick={() => setPage((p) => p + 1)}>Next</button>
+        <p className="text-lg">{page}</p>
+        <button onClick={() => setPage((p) => p + 1)}>
+          <ArrowRight size={25} />
+        </button>
       </div>
     </div>
   );

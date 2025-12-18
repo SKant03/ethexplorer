@@ -25,9 +25,8 @@ export async function fetchBlockByNumber(blockHex: string) {
 export async function fetchBlockByNumber2(blockHex: string) {
   const block = await rpc<any>("eth_getBlockByNumber", [blockHex, true]);
 
-  return block
+  return block;
 }
-
 
 // Fetch latest block number
 export async function fetchLatestBlockNumber(): Promise<number> {
@@ -42,7 +41,6 @@ export async function fetchLatestBlock() {
   return fetchBlockByNumber(hex);
 }
 
-
 export async function fetchTransactionByHash(txHash: string) {
   const block = await rpc<any>("eth_getTransactionByHash", [txHash]);
 
@@ -53,4 +51,19 @@ export async function fetchTransactionReceipt(txHash: string) {
   const block = await rpc<any>("eth_getTransactionReceipt", [txHash]);
 
   return block;
+}
+
+export async function fetchAddressInfo(address: string) {
+  const [balanceHex, nonceHex, code] = await Promise.all([
+    rpc<string>("eth_getBalance", [address, "latest"]),
+    rpc<string>("eth_getTransactionCount", [address, "latest"]),
+    rpc<string>("eth_getCode", [address, "latest"]),
+  ]);
+
+  return {
+    address,
+    balance: parseInt(balanceHex, 16) / 1e18,
+    nonce: parseInt(nonceHex, 16),
+    isContract: code !== "0x",
+  };
 }

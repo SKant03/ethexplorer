@@ -1,13 +1,15 @@
 "use client";
 
-
 import { useState } from "react";
 import useIsDark from "@/utils/useIsDark";
 import clsx from "clsx";
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
-import { fetchTransactionByHash, fetchTransactionReceipt } from "@/lib/queries/getLatestBlock";
+import {
+  fetchTransactionByHash,
+  fetchTransactionReceipt,
+} from "@/lib/queries/queries";
 
 export default function Transaction() {
   const { transaction } = useParams<{ transaction: string }>();
@@ -20,27 +22,22 @@ export default function Transaction() {
     data: tx,
     isLoading,
     isError,
-    error,
   } = useQuery({
     queryKey: ["blockno", transaction],
     queryFn: () => fetchTransactionByHash(transaction),
   });
 
   const {
-    data:receipt,
-    isLoading:rxLoading,
-    isError:rxError
+    data: receipt,
+    isLoading: rxLoading,
+    isError: rxError,
   } = useQuery({
-    queryKey:["blockno","rx",transaction],
-    queryFn:()=> fetchTransactionReceipt(transaction),
+    queryKey: ["blockno", "rx", transaction],
+    queryFn: () => fetchTransactionReceipt(transaction),
   });
-  console.log(tx);
   if (isLoading || rxLoading) return <div>Loading…</div>;
   if (isError || rxError) return <div>Error loading transaction</div>;
 
-
-
-  console.log(tx);
   const valueEth = parseInt(tx.value ?? "0x0", 16) / 1e18;
   const gasUsed = parseInt(receipt.gasUsed ?? "0x0", 16);
   const gasPrice = parseInt(tx.gasPrice ?? "0x0", 16);
@@ -129,11 +126,7 @@ export default function Transaction() {
             >
               <Row
                 label="Transaction Hash"
-                value={
-                  <span className="font-mono break-all">
-                    {tx.hash}
-                  </span>
-                }
+                value={<span className="font-mono break-all">{tx.hash}</span>}
                 isDark={isDark}
               />
               <Row

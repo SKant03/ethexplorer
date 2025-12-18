@@ -4,21 +4,25 @@ import Link from "next/link";
 import ThemeButton from "./ThemeButton";
 import clsx from "clsx";
 import useIsDark from "@/utils/useIsDark";
+import Search from "./Search";
 
 export default function Navbar() {
   const isDark = useIsDark();
   return (
     <nav
-      className={
-        clsx("flex items-center justify-between px-6 py-4 border-b",
-        isDark ? "bg-gray-800 text-slate-200" : "bg-gray-200 text-slate-800")
-      }
+      className={clsx(
+        "flex items-center justify-between px-6 py-4 border-b",
+        isDark ? "bg-gray-800 text-slate-200" : "bg-gray-200 text-slate-800"
+      )}
     >
       <div className="text-lg font-semibold">
         <Link href="/">ETH Explorer</Link>
       </div>
+      <div>
+        <Search />
+      </div>
 
-      <div className="flex gap-6 text-sm">
+      <div className="flex gap-1 md:gap-3 lg:gap-6 text-sm">
         <Link href="/blocks" className="hover:text-blue-500">
           Blocks
         </Link>

@@ -1,25 +1,24 @@
 "use client";
 import { useState } from "react";
 import useIsDark from "@/utils/useIsDark";
-import TransactionRow from "./TransactionRow";
+import TransactionRow from "../../components/TransactionRow";
 import { useQuery } from "@tanstack/react-query";
-import { fetchBlockByNumber2 } from "@/lib/queries/getLatestBlock";
-import { fetchLatestBlockNumber } from "@/lib/queries/getLatestBlock";
-import TableHead from "../common/TableHead";
+import { fetchBlockByNumber2 } from "@/lib/queries/queries";
+import { fetchLatestBlockNumber } from "@/lib/queries/queries";
+import TableHead from "../../components/TableHead";
 import clsx from "clsx";
-
-
+import { ArrowLeft, ArrowRight } from "lucide-react";
 
 export default function BlockTransactions() {
   const isDark = useIsDark();
   const [page, setPage] = useState(1);
   const PAGE_SIZE = 10;
 
-    const { data: latestBlockNumber } = useQuery({
-      queryKey: ["latestBlockNumber"],
-      queryFn: fetchLatestBlockNumber,
-      // refetchInterval: page === 1 ? 5000 : false,       //uncomment this line to start the live fetch
-    });
+  const { data: latestBlockNumber } = useQuery({
+    queryKey: ["latestBlockNumber"],
+    queryFn: fetchLatestBlockNumber,
+    // refetchInterval: page === 1 ? 5000 : false,       //uncomment this line to start the live fetch
+  });
   const hex = "0x" + latestBlockNumber?.toString(16);
 
   const { data, isLoading, isError } = useQuery({
@@ -31,8 +30,7 @@ export default function BlockTransactions() {
     return <div className="text-center min-h-screen">Loading…</div>;
   if (isError) return <div>Error loading block transactions</div>;
 
-  const transactions = data.transactions; 
-  console.log(transactions)// array of full transactions
+  const transactions = data.transactions;
 
   // Pagination
   const start = (page - 1) * PAGE_SIZE;
@@ -67,32 +65,17 @@ export default function BlockTransactions() {
       {/* Pagination Controls */}
       {totalPages > 1 && (
         <div className="flex justify-center gap-4 mt-4">
-          <button
-            disabled={page === 1}
-            className={clsx(
-              "px-4 py-2 border rounded",
-              isDark
-                ? "bg-slate-700 border-slate-600 text-white"
-                : "bg-gray-100 border-gray-300 text-black"
-            )}
-            onClick={() => setPage((p) => p - 1)}
-          >
-            Previous
+          <button disabled={page === 1} onClick={() => setPage((p) => p - 1)}>
+            <ArrowLeft size={25} />
           </button>
           <span className={clsx(isDark ? "text-white" : "text-black")}>
-            Page {page} of {totalPages}
+            {page}
           </span>
           <button
             disabled={page === totalPages}
-            className={clsx(
-              "px-4 py-2 border rounded",
-              isDark
-                ? "bg-slate-700 border-slate-600 text-white"
-                : "bg-gray-100 border-gray-300 text-black"
-            )}
             onClick={() => setPage((p) => p + 1)}
           >
-            Next
+            <ArrowRight size={25} />
           </button>
         </div>
       )}

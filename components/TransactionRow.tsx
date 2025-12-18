@@ -22,8 +22,8 @@ export default function TransactionRow({ txRow }: TransactionRowType) {
           <Link href={`/transactions/${txRow.Tx}`}>{txRow.Tx}</Link>
         </div>
         <div className="w-4/12 truncate">{txRow.from}</div>
-        <div className="truncate w-3/12">{txRow.to}</div>
-        <div className="w-2/12">{txRow.value}</div>
+        <div className="truncate w-3/12 hidden md:table-cell">{txRow.to}</div>
+        <div className="w-2/12 text-right">{txRow.value}</div>
       </div>
     </div>
   );
