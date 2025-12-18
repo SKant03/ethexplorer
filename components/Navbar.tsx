@@ -8,30 +8,35 @@ import Search from "./Search";
 
 export default function Navbar() {
   const isDark = useIsDark();
+
   return (
     <nav
       className={clsx(
-        "flex items-center justify-between px-6 py-4 border-b",
+        "border-b px-4 py-3",
         isDark ? "bg-gray-800 text-slate-200" : "bg-gray-200 text-slate-800"
       )}
     >
-      <div className="text-lg font-semibold">
-        <Link href="/">ETH Explorer</Link>
-      </div>
-      <div>
-        <Search />
-      </div>
+      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+        <div className="text-lg font-semibold text-center md:text-left">
+          <Link href="/">ETH Explorer</Link>
+        </div>
 
-      <div className="flex gap-1 md:gap-3 lg:gap-6 text-sm">
-        <Link href="/blocks" className="hover:text-blue-500">
-          Blocks
-        </Link>
+        <div className="w-full md:max-w-xl md:flex-1">
+          <Search />
+        </div>
 
-        <Link href="/transactions" className="hover:text-blue-500">
-          Transactions
-        </Link>
+        <div className="flex items-center justify-between md:justify-end gap-3 md:gap-6 text-sm">
+          <div className="flex gap-3 md:gap-6">
+            <Link href="/blocks" className="hover:text-blue-500">
+              Blocks
+            </Link>
+            <Link href="/transactions" className="hover:text-blue-500">
+              Transactions
+            </Link>
+          </div>
+          <ThemeButton />
+        </div>
       </div>
-      <ThemeButton />
     </nav>
   );
 }

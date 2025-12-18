@@ -19,14 +19,12 @@ export default function Search() {
       case "block":
         router.push(`/blocks/${value}`);
         break;
-
       case "address":
         router.push(`/account/${value}`);
         break;
       case "tx":
         router.push(`/transactions/${value}`);
         break;
-
       default:
         alert("Invalid Search Input");
     }
@@ -34,10 +32,10 @@ export default function Search() {
   };
 
   return (
-    <div className="w-full flex justify-center">
+    <div className="w-full flex justify-center px-2 sm:px-0">
       <div
         className={clsx(
-          "flex items-center w-full rounded-full border overflow-hidden",
+          "flex items-center w-full max-w-xs sm:max-w-md md:max-w-lg rounded-full border overflow-hidden",
           isDark ? "border-slate-700 bg-slate-900" : "border-slate-300 bg-white"
         )}
       >
@@ -47,7 +45,7 @@ export default function Search() {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           className={clsx(
-            "flex-1 px-4 py-2 text-sm outline-none bg-transparent",
+            "flex-1 px-3 sm:px-4 py-2 text-sm outline-none bg-transparent",
             isDark ? "text-white placeholder-slate-400" : "text-black"
           )}
         />
@@ -55,7 +53,7 @@ export default function Search() {
         <button
           onClick={() => handleSearch(input)}
           className={clsx(
-            "px-4 py-2 transition",
+            "px-3 sm:px-4 py-2 transition",
             isDark
               ? "hover:bg-slate-800 text-slate-300"
               : "hover:bg-slate-100 text-slate-700"

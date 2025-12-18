@@ -3,8 +3,10 @@ import { useState } from "react";
 import useIsDark from "@/utils/useIsDark";
 import TransactionRow from "../../components/TransactionRow";
 import { useQuery } from "@tanstack/react-query";
-import { fetchBlockByNumber2 } from "@/lib/queries/queries";
-import { fetchLatestBlockNumber } from "@/lib/queries/queries";
+import {
+  fetchBlockByNumber2,
+  fetchLatestBlockNumber,
+} from "@/lib/queries/queries";
 import TableHead from "../../components/TableHead";
 import clsx from "clsx";
 import { ArrowLeft, ArrowRight } from "lucide-react";
@@ -17,8 +19,8 @@ export default function BlockTransactions() {
   const { data: latestBlockNumber } = useQuery({
     queryKey: ["latestBlockNumber"],
     queryFn: fetchLatestBlockNumber,
-    // refetchInterval: page === 1 ? 5000 : false,       //uncomment this line to start the live fetch
   });
+
   const hex = "0x" + latestBlockNumber?.toString(16);
 
   const { data, isLoading, isError } = useQuery({
@@ -39,7 +41,7 @@ export default function BlockTransactions() {
   const totalPages = Math.ceil(transactions.length / PAGE_SIZE);
 
   return (
-    <div className="w-full">
+    <div className="w-full px-2 sm:px-4">
       {/* Table Header */}
       <TableHead
         columns={[
@@ -49,33 +51,47 @@ export default function BlockTransactions() {
           { title: "Value", className: "w-1/12" },
         ]}
       />
+
       {/* Transactions */}
       {paginatedTxs.map((tx: any, index: number) => (
-        <TransactionRow
-          key={tx.hash || index}
-          txRow={{
-            Tx: tx.hash,
-            from: tx.from,
-            to: tx.to,
-            value: parseInt(tx.value ?? "0x0", 16) / 1e18,
-          }}
-        />
+        <div key={tx.hash || index} className="transition hover:scale-[1.005]">
+          <TransactionRow
+            txRow={{
+              Tx: tx.hash,
+              from: tx.from,
+              to: tx.to,
+              value: parseInt(tx.value ?? "0x0", 16) / 1e18,
+            }}
+          />
+        </div>
       ))}
 
       {/* Pagination Controls */}
       {totalPages > 1 && (
-        <div className="flex justify-center gap-4 mt-4">
-          <button disabled={page === 1} onClick={() => setPage((p) => p - 1)}>
-            <ArrowLeft size={25} />
+        <div className="flex justify-center items-center gap-4 mt-6">
+          <button
+            disabled={page === 1}
+            onClick={() => setPage((p) => p - 1)}
+            className="p-2 rounded-full transition hover:bg-gray-200 disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            <ArrowLeft size={22} />
           </button>
-          <span className={clsx(isDark ? "text-white" : "text-black")}>
+
+          <span
+            className={clsx(
+              "text-lg font-medium",
+              isDark ? "text-white" : "text-black"
+            )}
+          >
             {page}
           </span>
+
           <button
             disabled={page === totalPages}
             onClick={() => setPage((p) => p + 1)}
+            className="p-2 rounded-full transition hover:bg-gray-200 disabled:opacity-40 disabled:cursor-not-allowed"
           >
-            <ArrowRight size={25} />
+            <ArrowRight size={22} />
           </button>
         </div>
       )}

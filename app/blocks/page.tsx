@@ -19,7 +19,6 @@ export default function Block() {
   const { data: latestBlockNumber } = useQuery({
     queryKey: ["latestBlockNumber"],
     queryFn: fetchLatestBlockNumber,
-    // refetchInterval: page === 1 ? 10000 : false, //uncomment this line to start the live fetch
   });
 
   const { data: blocks = [], isLoading: isListReady } = useQuery({
@@ -52,16 +51,14 @@ export default function Block() {
     fetchBlockByNumber(hex).then((newBlock) => {
       queryClient.setQueryData(["blocks", 1], (old: any[] | undefined) => {
         if (!old) return old;
-
         if (old[0]?.number === newBlock.number) return old;
-
         return [newBlock, ...old.slice(0, PAGE_SIZE - 1)];
       });
     });
   }, [latestBlockNumber, page, queryClient]);
 
   return (
-    <div>
+    <div className="px-2 sm:px-4">
       <TableHead
         columns={[
           { title: "Block", className: "w-3/12" },
@@ -71,35 +68,47 @@ export default function Block() {
         ]}
       />
 
-      {/* Skeleton / Loader */}
+      {/* Skeleton */}
       {isListReady && (
-        <div className="flex justify-center">
+        <div className="flex justify-center px-2">
           <div className="h-10 bg-gray-200 animate-pulse mb-2 rounded w-full max-w-6xl"></div>
         </div>
       )}
 
-      {/* Render only when full list is ready */}
+      {/* Rows */}
       {!isListReady &&
         blocks.map((block, index) => (
-          <BlockRow
-            key={index}
-            blockRow={{
-              blockNo: block.number,
-              time: `${Math.floor((Date.now() - block.timestamp) / 1000)}s ago`,
-              miner: block.miner,
-              tx: block.txCount,
-            }}
-          />
+          <div key={index} className="transition hover:scale-[1.005]">
+            <BlockRow
+              blockRow={{
+                blockNo: block.number,
+                time: `${Math.floor(
+                  (Date.now() - block.timestamp) / 1000
+                )}s ago`,
+                miner: block.miner,
+                tx: block.txCount,
+              }}
+            />
+          </div>
         ))}
 
       {/* Pagination */}
-      <div className="flex justify-center gap-2 mt-4">
-        <button disabled={page === 1} onClick={() => setPage((p) => p - 1)}>
-          <ArrowLeft size={25} />
+      <div className="flex justify-center items-center gap-4 mt-6">
+        <button
+          disabled={page === 1}
+          onClick={() => setPage((p) => p - 1)}
+          className="p-2 rounded-full transition hover:bg-gray-200 disabled:opacity-40 disabled:cursor-not-allowed"
+        >
+          <ArrowLeft size={22} />
         </button>
-        <p className="text-lg">{page}</p>
-        <button onClick={() => setPage((p) => p + 1)}>
-          <ArrowRight size={25} />
+
+        <p className="text-lg font-medium">{page}</p>
+
+        <button
+          onClick={() => setPage((p) => p + 1)}
+          className="p-2 rounded-full transition hover:bg-gray-200"
+        >
+          <ArrowRight size={22} />
         </button>
       </div>
     </div>
