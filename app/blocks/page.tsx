@@ -9,6 +9,8 @@ import {
 } from "@/lib/queries/queries";
 import BlockRow from "../../components/BlockRow";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import useResizeWidth from "@/utils/useResizeWidth";
+import Address from "@/components/Address";
 
 const PAGE_SIZE = 10;
 
@@ -57,13 +59,16 @@ export default function Block() {
     });
   }, [latestBlockNumber, page, queryClient]);
 
+  const {ref: minerRef, width:minerWidth} = useResizeWidth<HTMLDivElement>()
+
   return (
     <div className="px-2 sm:px-4">
+      <div className="w-full" ref={minerRef}>{minerWidth}</div>
       <TableHead
         columns={[
           { title: "Block", className: "w-3/12" },
           { title: "Time", className: "w-2/12" },
-          { title: "Miner", className: "w-6/12" },
+          { title: "Miner", className: "w-6/12"},
           { title: "Total Tx", className: "w-1/12" },
         ]}
       />
