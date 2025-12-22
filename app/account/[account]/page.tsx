@@ -17,7 +17,13 @@ export default function AccountDetails() {
   });
 
   if (isLoading)
-    return <div className="min-h-screen text-center">Loading…</div>;
+    return (
+      <div className="w-full h-screen flex justify-center">
+        <div className="h-50 flex justify-center items-center bg-gray-200 animate-pulse mb-2 rounded w-full max-w-6xl">
+          Loading…
+        </div>
+      </div>
+    );
   if (isError) return <div>Error fetching Account </div>;
 
   return (

@@ -36,7 +36,14 @@ export default function Transaction() {
     queryKey: ["blockno", "rx", transaction],
     queryFn: () => fetchTransactionReceipt(transaction),
   });
-  if (isLoading || rxLoading) return <div>Loading…</div>;
+  if (isLoading || rxLoading)
+    return (
+      <div className="w-full h-screen flex justify-center">
+        <div className="h-50 flex justify-center items-center bg-gray-300 animate-pulse mb-2 rounded w-full max-w-6xl">
+          Loading…
+        </div>
+      </div>
+    );
   if (isError || rxError) return <div>Error loading transaction</div>;
 
   const valueEth = parseInt(tx.value ?? "0x0", 16) / 1e18;

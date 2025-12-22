@@ -4,7 +4,7 @@ import { useTheme } from "@/context/ThemeContext";
 import useIsDark from "@/utils/useIsDark";
 import { MoonStar, Sun } from "lucide-react";
 export default function ThemeButton() {
-  const { theme, toggleTheme } = useTheme();
+  const { toggleTheme } = useTheme();
   const isDark = useIsDark();
   return (
     <div

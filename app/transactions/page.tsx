@@ -11,6 +11,7 @@ import TableHead from "../../components/TableHead";
 import clsx from "clsx";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { formatValue } from "@/utils/useValueFormat";
+import { TX_HEAD } from "@/utils/Constants";
 
 export default function BlockTransactions() {
   const isDark = useIsDark();
@@ -47,12 +48,7 @@ export default function BlockTransactions() {
     <div className="w-full px-2 sm:px-4">
       {/* Table Header */}
       <TableHead
-        columns={[
-          { title: "Transactions", className: "w-3/7 md:w-3/12" },
-          { title: "From", className: "w-3/7 md:w-4/12" },
-          { title: "To", className: "w-4/12 hidden md:table-cell" },
-          { title: "Value", className: "w-1/7 md:w-1/12 text-right" },
-        ]}
+        columns={TX_HEAD}
       />
 
       {isLoading && (
@@ -123,9 +119,6 @@ export default function BlockTransactions() {
           copied to clipboard
         </div>
       )}
-
-      <div className="flex justify-end">{formatValue("0x7048860f9180")}</div>
-      <div className="flex justify-end">{formatValue("0x0")}</div>
     </div>
   );
 }

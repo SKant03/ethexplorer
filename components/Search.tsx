@@ -11,6 +11,7 @@ export default function Search() {
   const [input, setInput] = useState("");
   const isDark = useIsDark();
   const router = useRouter();
+  const [invalid, setInvalid] = useState(false);
 
   const handleSearch = (value: string) => {
     const type = detectSearchType(value);
@@ -18,25 +19,35 @@ export default function Search() {
     switch (type) {
       case "block":
         router.push(`/blocks/${value}`);
+        setInput("");
         break;
       case "address":
         router.push(`/account/${value}`);
+        setInput("");
         break;
       case "tx":
         router.push(`/transactions/${value}`);
+        setInput("");
         break;
       default:
-        alert("Invalid Search Input");
+        setInvalid(true);
+        setTimeout(() => setInvalid(false), 3000);
+        break;
     }
-    setInput("");
   };
 
   return (
-    <div className="w-full flex justify-center px-2 sm:px-0">
+    <div className="w-full flex flex-col items-center px-2 sm:px-0 relative">
       <div
         className={clsx(
-          "flex items-center w-full max-w-xs sm:max-w-md md:max-w-lg rounded-full border overflow-hidden",
-          isDark ? "border-slate-700 bg-slate-900" : "border-slate-300 bg-white"
+          "flex items-center w-full max-w-xs sm:max-w-md md:max-w-lg rounded-full border overflow-hidden relative",
+          isDark
+            ? invalid
+              ? "border-red-600 bg-slate-900"
+              : "border-slate-700 bg-slate-900"
+            : invalid
+            ? "border-red-600 bg-white"
+            : "border-slate-300 bg-white"
         )}
       >
         <input
@@ -44,6 +55,9 @@ export default function Search() {
           placeholder="Search by block / tx / address"
           value={input}
           onChange={(e) => setInput(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") handleSearch(input);
+          }}
           className={clsx(
             "flex-1 px-3 sm:px-4 py-2 text-sm outline-none bg-transparent",
             isDark ? "text-white placeholder-slate-400" : "text-black"

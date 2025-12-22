@@ -22,7 +22,7 @@ export default function Row({
       <div
         className={clsx(
           isDark ? "text-slate-300" : "text-slate-800",
-          "text-right"
+          "text-right truncate"
         )}
       >
         {value}

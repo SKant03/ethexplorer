@@ -1,14 +1,3 @@
-// import { rpc } from "@/app/api/rpc/client";
-
-// export async function fetchLatestBlock() {
-//   const latestHex = await rpc<string>("eth_blockNumber");
-//    const block = await rpc<any>("eth_getBlockByNumber", [latestHex, true]);
-
-//   return {
-//     block
-//   };
-// }
-
 import { rpc } from "@/app/api/rpc/client";
 
 // Fetch a single block by hex number

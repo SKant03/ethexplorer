@@ -7,8 +7,9 @@ import { useParams } from "next/navigation";
 import { fetchBlockByNumber2 } from "@/lib/queries/queries";
 import { useQuery } from "@tanstack/react-query";
 import Row from "@/components/Row";
+import { formatTimestamp } from "@/utils/useTimeFormat";
 
-export default function Block({ chainId }: { chainId: number }) {
+export default function Block() {
   const { blockNo } = useParams<{ blockNo: string }>();
   const [showMore, setShowMore] = useState(false);
   const isDark = useIsDark();
@@ -29,13 +30,19 @@ export default function Block({ chainId }: { chainId: number }) {
   });
 
   if (isLoading)
-    return <div className="min-h-screen text-center">Loading…</div>;
+    return (
+      <div className="w-full h-screen flex justify-center">
+        <div className="h-50 flex justify-center items-center bg-gray-300 animate-pulse mb-2 rounded w-full max-w-6xl">
+          Loading…
+        </div>
+      </div>
+    );
   if (isError) return <div>Error loading block </div>;
 
   const blockNumber = parseInt(block.number ?? "0x0", 16);
   const timestampMs = parseInt(block.timestamp ?? "0x0", 16) * 1000;
   const date = new Date(timestampMs);
-  const timeAgoMins = Math.floor((Date.now() - timestampMs) / 60000);
+  const timeAgoMins = formatTimestamp(timestampMs);
 
   return (
     <div className="w-full h-full min-h-screen">
@@ -58,7 +65,7 @@ export default function Block({ chainId }: { chainId: number }) {
           <Row label="Status" value="Finalized" />
           <Row
             label="Timestamp"
-            value={`${timeAgoMins} mins ago (${date.toUTCString()})`}
+            value={`${timeAgoMins} (${date.toUTCString()})`}
           />
           <Row
             label="Transactions"

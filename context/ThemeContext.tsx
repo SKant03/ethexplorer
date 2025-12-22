@@ -11,29 +11,29 @@ type ThemeContextType = {
   toggleTheme: () => void;
 };
 
-const ThemeContext = createContext<ThemeContextType|undefined>(undefined);
+const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-export function ThemeProvider({children}:{children:React.ReactNode}){
-    const [theme, setTheme]= useState<Theme>("light");
+export function ThemeProvider({ children }: { children: React.ReactNode }) {
+  const [theme, setTheme] = useState<Theme>("light");
 
-    const toggleTheme =()=>{
-        setTheme((prev)=>(prev === "light" ? "dark":"light"))
-    };
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === "light" ? "dark" : "light"));
+  };
 
-    return (
-      <ThemeContext.Provider value={{ theme, toggleTheme }}>
-        <div
-          className={clsx(
-            theme === "dark"
-              ? "bg-slate-950 text-slate-100 border-slate-800"
-              : "bg-slate-50 text-slate-900 border-slate-200","min-h-screen h-max"
-          )}
-        >
-          {children}
-        </div>
-      </ThemeContext.Provider>
-    );
-
+  return (
+    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+      <div
+        className={clsx(
+          theme === "dark"
+            ? "bg-slate-950 text-slate-100 border-slate-800"
+            : "bg-slate-50 text-slate-900 border-slate-200",
+          "min-h-screen h-max"
+        )}
+      >
+        {children}
+      </div>
+    </ThemeContext.Provider>
+  );
 }
 export function useTheme() {
   const context = useContext(ThemeContext);

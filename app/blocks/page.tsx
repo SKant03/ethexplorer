@@ -11,6 +11,7 @@ import BlockRow from "../../components/BlockRow";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import clsx from "clsx";
 import useIsDark from "@/utils/useIsDark";
+import { BLOCK_HEAD } from "@/utils/Constants";
 
 const PAGE_SIZE = 15;
 
@@ -63,12 +64,7 @@ export default function Block() {
   return (
     <div className="px-2 sm:px-4">
       <TableHead
-        columns={[
-          { title: "Block", className: "w-3/12" },
-          { title: "Time", className: "w-2/12" },
-          { title: "Miner", className: "w-5/12 lg:w-6/12" },
-          { title: "Total Tx", className: "w-2/12 lg:w-1/12 text-right " },
-        ]}
+        columns={BLOCK_HEAD}
       />
 
       {/* Skeleton */}

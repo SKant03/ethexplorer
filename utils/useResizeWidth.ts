@@ -2,19 +2,19 @@
 
 import { useEffect, useRef, useState } from "react";
 
-export default function useResizeWidth< T extends HTMLElement>(){
-    const ref = useRef <T | null>(null);
-    const [width, setWidth] = useState(0);
+export default function useResizeWidth<T extends HTMLElement>() {
+  const ref = useRef<T | null>(null);
+  const [width, setWidth] = useState(0);
 
-    useEffect(()=>{
-        if(!ref.current) return;
+  useEffect(() => {
+    if (!ref.current) return;
 
-        const observer = new ResizeObserver(([entry]) =>{
-            setWidth(entry.contentRect.width);
-        });
-        observer.observe(ref.current);
-        return()=> observer.disconnect();
-    },[]);
+    const observer = new ResizeObserver(([entry]) => {
+      setWidth(entry.contentRect.width);
+    });
+    observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, []);
 
-    return {ref, width};
+  return { ref, width };
 }

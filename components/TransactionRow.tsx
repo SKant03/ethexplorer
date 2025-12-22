@@ -7,7 +7,7 @@ import useTruncate from "@/utils/Truncate";
 import useResizeWidth from "@/utils/useResizeWidth";
 
 type TransactionRowType = {
-  txRow: { Tx: string; from: any; to: string; value: bigint| string };
+  txRow: { Tx: string; from: any; to: string; value: bigint | string };
   onCopy: () => void;
 };
 
