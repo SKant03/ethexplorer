@@ -131,8 +131,6 @@ export default function Block() {
           copied to clipboard
         </div>
       )}
-
-      <div className="flex justify-center">timetest 1766391348000</div>
     </div>
   );
 }

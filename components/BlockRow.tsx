@@ -6,6 +6,7 @@ import { Copy } from "lucide-react";
 import Link from "next/link";
 import useTruncate from "@/utils/Truncate";
 import useResizeWidth from "@/utils/useResizeWidth";
+import { formatTimestamp } from "@/utils/useTimeFormat";
 
 type BlockRowType = {
   blockRow: {
@@ -43,7 +44,9 @@ export default function BlockRow({ blockRow, onCopy }: BlockRowType) {
         </div>
 
         {/* Time */}
-        <div className="w-2/12 truncate text-slate-500">{blockRow.time}</div>
+        <div className="w-2/12 truncate text-slate-500">
+          {formatTimestamp(blockRow.time)}
+        </div>
 
         {/* Miner */}
         <div

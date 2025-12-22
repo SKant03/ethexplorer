@@ -10,6 +10,7 @@ import {
 import TableHead from "../../components/TableHead";
 import clsx from "clsx";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import { formatValue } from "@/utils/useValueFormat";
 
 export default function BlockTransactions() {
   const isDark = useIsDark();
@@ -73,7 +74,7 @@ export default function BlockTransactions() {
               Tx: tx.hash,
               from: tx.from,
               to: tx.to,
-              value: parseInt(tx.value ?? "0x0", 16) / 1e18,
+              value: formatValue(BigInt(tx.value ?? "0x0")),
             }}
             onCopy={() => {
               setCopy(true);
@@ -122,6 +123,9 @@ export default function BlockTransactions() {
           copied to clipboard
         </div>
       )}
+
+      <div className="flex justify-end">{formatValue("0x7048860f9180")}</div>
+      <div className="flex justify-end">{formatValue("0x0")}</div>
     </div>
   );
 }
