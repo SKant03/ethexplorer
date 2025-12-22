@@ -11,7 +11,8 @@ import TableHead from "../../components/TableHead";
 import clsx from "clsx";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { formatValue } from "@/utils/useValueFormat";
-import { TX_HEAD } from "@/utils/Constants";
+import { TX_HEAD } from "@/constants";
+import CopytoClipboard from "@/components/CopyToClipboard";
 
 export default function BlockTransactions() {
   const isDark = useIsDark();
@@ -47,16 +48,17 @@ export default function BlockTransactions() {
   return (
     <div className="w-full px-2 sm:px-4">
       {/* Table Header */}
-      <TableHead
-        columns={TX_HEAD}
-      />
+      <TableHead columns={TX_HEAD} />
 
       {isLoading && (
         <div className="flex flex-col items-center px-2">
           {new Array(PAGE_SIZE).fill(0).map((_, index) => (
             <div
               key={index}
-              className="h-10 bg-gray-200 animate-pulse mb-2 rounded w-full max-w-6xl"
+              className={clsx(
+                "h-10 bg-gray-200 animate-pulse mb-2 rounded w-full max-w-6xl",
+                isDark ? "bg-gray-600" : "bg-gray-300"
+              )}
             ></div>
           ))}
         </div>
@@ -109,16 +111,7 @@ export default function BlockTransactions() {
           </button>
         </div>
       )}
-      {copy && (
-        <div
-          className={clsx(
-            "fixed bottom-4 right-6 p-2 rounded-xl",
-            isDark ? "bg-slate-700" : "bg-slate-300"
-          )}
-        >
-          copied to clipboard
-        </div>
-      )}
+      {copy && <CopytoClipboard />}
     </div>
   );
 }

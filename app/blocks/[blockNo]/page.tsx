@@ -23,7 +23,6 @@ export default function Block() {
     data: block,
     isLoading,
     isError,
-    error,
   } = useQuery({
     queryKey: ["blockno", blockNo],
     queryFn: () => fetchBlockByNumber2(hex),
@@ -32,7 +31,12 @@ export default function Block() {
   if (isLoading)
     return (
       <div className="w-full h-screen flex justify-center">
-        <div className="h-50 flex justify-center items-center bg-gray-300 animate-pulse mb-2 rounded w-full max-w-6xl">
+        <div
+          className={clsx(
+            "h-10 bg-gray-200 animate-pulse mb-2 rounded w-full max-w-6xl",
+            isDark ? "bg-gray-600" : "bg-gray-300"
+          )}
+        >
           Loading…
         </div>
       </div>

@@ -12,8 +12,10 @@ export default function Navbar() {
   return (
     <nav
       className={clsx(
-        "border-b px-4 py-3 mb-3",
-        isDark ? "bg-gray-800 text-slate-200" : "bg-gray-200 text-slate-800"
+        "border-b px-4 py-3 mb-8",
+        isDark
+          ? "bg-gray-800 text-slate-200 border-slate-700"
+          : "bg-gray-200 text-slate-800 border-slate-200"
       )}
     >
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">

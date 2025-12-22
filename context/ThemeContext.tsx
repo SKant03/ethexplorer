@@ -25,7 +25,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       <div
         className={clsx(
           theme === "dark"
-            ? "bg-slate-950 text-slate-100 border-slate-800"
+            ? "bg-slate-950 text-slate-100 border-slate-800 h-full min-h-screen"
             : "bg-slate-50 text-slate-900 border-slate-200",
           "min-h-screen h-max"
         )}

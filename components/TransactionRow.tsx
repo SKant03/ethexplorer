@@ -3,7 +3,7 @@ import useIsDark from "@/utils/useIsDark";
 import clsx from "clsx";
 import Link from "next/link";
 import { Copy } from "lucide-react";
-import useTruncate from "@/utils/Truncate";
+import useTruncate from "@/utils/truncate";
 import useResizeWidth from "@/utils/useResizeWidth";
 
 type TransactionRowType = {

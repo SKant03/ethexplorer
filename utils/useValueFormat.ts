@@ -44,8 +44,6 @@ export const formatValue = (value: number | bigint | string) => {
           .join("")
       : "";
 
-  // If the fraction is all zeros
-  if (leadingZeroCount === 18) return `${ethInteger}.0₁₈`;
 
   return `${ethInteger}.0${subscript}${significant}`;
 };

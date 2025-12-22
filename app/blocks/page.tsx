@@ -11,7 +11,8 @@ import BlockRow from "../../components/BlockRow";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import clsx from "clsx";
 import useIsDark from "@/utils/useIsDark";
-import { BLOCK_HEAD } from "@/utils/Constants";
+import { BLOCK_HEAD } from "@/constants";
+import CopytoClipboard from "@/components/CopyToClipboard";
 
 const PAGE_SIZE = 15;
 
@@ -63,9 +64,7 @@ export default function Block() {
 
   return (
     <div className="px-2 sm:px-4">
-      <TableHead
-        columns={BLOCK_HEAD}
-      />
+      <TableHead columns={BLOCK_HEAD} />
 
       {/* Skeleton */}
       {isListReady && (
@@ -73,7 +72,10 @@ export default function Block() {
           {new Array(PAGE_SIZE).fill(0).map((_, index) => (
             <div
               key={index}
-              className="h-10 bg-gray-200 animate-pulse mb-2 rounded w-full max-w-6xl"
+              className={clsx(
+                "h-10 bg-gray-200 animate-pulse mb-2 rounded w-full max-w-6xl",
+                isDark ? "bg-gray-600" : "bg-gray-300"
+              )}
             ></div>
           ))}
         </div>
@@ -117,16 +119,7 @@ export default function Block() {
           <ArrowRight size={22} />
         </button>
       </div>
-      {copy && (
-        <div
-          className={clsx(
-            "fixed bottom-4 right-6 p-2 rounded-xl",
-            isDark ? "bg-slate-700" : "bg-slate-300"
-          )}
-        >
-          copied to clipboard
-        </div>
-      )}
+      {copy && <CopytoClipboard />}
     </div>
   );
 }

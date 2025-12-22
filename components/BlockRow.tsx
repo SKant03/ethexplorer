@@ -4,7 +4,7 @@ import useIsDark from "@/utils/useIsDark";
 import clsx from "clsx";
 import { Copy } from "lucide-react";
 import Link from "next/link";
-import useTruncate from "@/utils/Truncate";
+import useTruncate from "@/utils/truncate";
 import useResizeWidth from "@/utils/useResizeWidth";
 import { formatTimestamp } from "@/utils/useTimeFormat";
 
