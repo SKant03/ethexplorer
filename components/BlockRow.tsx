@@ -1,45 +1,86 @@
 "use client";
+
 import useIsDark from "@/utils/useIsDark";
 import clsx from "clsx";
 import { Copy } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import useTruncate from "@/utils/Truncate";
+import useResizeWidth from "@/utils/useResizeWidth";
 
 type BlockRowType = {
-  blockRow: { blockNo: number; time: any; miner: string; tx: number };
+  blockRow: {
+    blockNo: number;
+    time: number;
+    miner: string;
+    tx: number;
+  };
+  onCopy: () => void;
 };
-export default function BlockRow({ blockRow }: BlockRowType) {
-  const isDark = useIsDark();
-  const [copy, setCopy] = useState(false);
-  const handleCopy =async()=>{
-    await navigator.clipboard.writeText(blockRow.miner)
-    setCopy(true);
 
-    setTimeout(()=>setCopy(false), 5000)
-  }
+export default function BlockRow({ blockRow, onCopy }: BlockRowType) {
+  const isDark = useIsDark();
+  const { ref: minerRef, width: minerWidth } = useResizeWidth<HTMLDivElement>();
+  const minerTruncate = useTruncate(minerWidth, blockRow.miner);
+
+  const handleCopy = async () => {
+    await navigator.clipboard.writeText(blockRow.miner);
+    onCopy();
+  };
+
   return (
     <div className="w-full flex justify-center">
       <div
         className={clsx(
-          "w-full max-w-6xl flex justify-between gap-2 mt-2 rounded py-2 px-3 text-sm text-left bg-gray-200 ",
+          "w-full max-w-6xl flex items-center justify-between gap-2 mt-2 rounded px-3 py-2 text-sm transition-colors",
           isDark
-            ? "border-slate-800 bg-slate-900 hover:bg-slate-800/50"
-            : "border-slate-200 bg-white hover:bg-slate-50"
+            ? "bg-slate-900 hover:bg-slate-800/60"
+            : "bg-white hover:bg-slate-50 border border-slate-200"
         )}
       >
-        <div className="w-3/12 ">
+        {/* Block number */}
+        <div className="w-3/12 font-medium hover:text-blue-600 hover:underline">
           <Link href={`/blocks/${blockRow.blockNo}`}>{blockRow.blockNo}</Link>
         </div>
-        <div className="w-2/12 truncate">{blockRow.time}</div>
-        <div className="w-6/12 flex group relative">
-    
-        <span className={clsx("absolute bottom-6 left-0 opacity-0  group-hover:opacity-100 transition-opacity px-1 rounded ", isDark?"bg-slate-700":"bg-slate-500")}>{blockRow.miner}</span>
-        <span className="truncate w-[80%]">
-          <Link href={`/account/${blockRow.miner}`}>{blockRow.miner}</Link></span>
-          <span className="absolute right-0 sm:left-30 md:left-80 opacity-0 group-hover:opacity-100"><button onClick={handleCopy}><Copy/></button></span>
+
+        {/* Time */}
+        <div className="w-2/12 truncate text-slate-500">{blockRow.time}</div>
+
+        {/* Miner */}
+        <div
+          className="w-5/12 lg:w-6/12 flex items-center justify-start  relative group"
+          ref={minerRef}
+        >
+          {/* Tooltip */}
+          <span
+            className={clsx(
+              "absolute -top-7 left-0 z-10 whitespace-nowrap px-2 py-1 rounded text-xs opacity-0 group-hover:opacity-100 transition-all",
+              isDark ? "bg-slate-700 text-white" : "bg-slate-600 text-white"
+            )}
+          >
+            {blockRow.miner}
+          </span>
+
+          {/* Address */}
+          <Link
+            href={`/account/${blockRow.miner}`}
+            className=" hover:text-blue-600 hover:underline"
+          >
+            {minerTruncate}
+          </Link>
+
+          {/* Copy icon */}
+          <button
+            onClick={handleCopy}
+            className="opacity-0 group-hover:opacity-100 transition-opacity text-slate-400 hover:text-slate-600 ml-2"
+          >
+            <Copy size={16} />
+          </button>
         </div>
 
-        <div className="w-1/12">{blockRow.tx}</div>
+        {/* Tx count */}
+        <div className="w-2/12 lg:w-1/12 text-right font-medium">
+          {blockRow.tx}
+        </div>
       </div>
     </div>
   );

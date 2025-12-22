@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useIsDark from "@/utils/useIsDark";
 import TransactionRow from "../../components/TransactionRow";
 import { useQuery } from "@tanstack/react-query";
@@ -14,7 +14,9 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 export default function BlockTransactions() {
   const isDark = useIsDark();
   const [page, setPage] = useState(1);
-  const PAGE_SIZE = 10;
+  const [copy, setCopy] = useState(false);
+  const [transactions, setTransaction] = useState([]);
+  const PAGE_SIZE = 15;
 
   const { data: latestBlockNumber } = useQuery({
     queryKey: ["latestBlockNumber"],
@@ -23,16 +25,16 @@ export default function BlockTransactions() {
 
   const hex = "0x" + latestBlockNumber?.toString(16);
 
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["blockTransactions", latestBlockNumber],
     queryFn: () => fetchBlockByNumber2(hex),
   });
 
-  if (isLoading)
-    return <div className="text-center min-h-screen">Loading…</div>;
-  if (isError) return <div>Error loading block transactions</div>;
-
-  const transactions = data.transactions;
+  useEffect(() => {
+    if (!isLoading) {
+      setTransaction(data.transactions);
+    }
+  }, [data]);
 
   // Pagination
   const start = (page - 1) * PAGE_SIZE;
@@ -45,12 +47,23 @@ export default function BlockTransactions() {
       {/* Table Header */}
       <TableHead
         columns={[
-          { title: "Transactions", className: "w-4/12" },
-          { title: "From", className: "w-4/12" },
-          { title: "To", className: "w-3/12" },
-          { title: "Value", className: "w-1/12" },
+          { title: "Transactions", className: "w-3/7 md:w-3/12" },
+          { title: "From", className: "w-3/7 md:w-4/12" },
+          { title: "To", className: "w-4/12 hidden md:table-cell" },
+          { title: "Value", className: "w-1/7 md:w-1/12 text-right" },
         ]}
       />
+
+      {isLoading && (
+        <div className="flex flex-col items-center px-2">
+          {new Array(PAGE_SIZE).fill(0).map((_, index) => (
+            <div
+              key={index}
+              className="h-10 bg-gray-200 animate-pulse mb-2 rounded w-full max-w-6xl"
+            ></div>
+          ))}
+        </div>
+      )}
 
       {/* Transactions */}
       {paginatedTxs.map((tx: any, index: number) => (
@@ -61,6 +74,10 @@ export default function BlockTransactions() {
               from: tx.from,
               to: tx.to,
               value: parseInt(tx.value ?? "0x0", 16) / 1e18,
+            }}
+            onCopy={() => {
+              setCopy(true);
+              setTimeout(() => setCopy(false), 3000);
             }}
           />
         </div>
@@ -93,6 +110,16 @@ export default function BlockTransactions() {
           >
             <ArrowRight size={22} />
           </button>
+        </div>
+      )}
+      {copy && (
+        <div
+          className={clsx(
+            "fixed bottom-4 right-6 p-2 rounded-xl",
+            isDark ? "bg-slate-700" : "bg-slate-300"
+          )}
+        >
+          copied to clipboard
         </div>
       )}
     </div>

@@ -2,6 +2,12 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Providers from "./provider";
 import { ThemeProvider } from "@/context/ThemeContext";
+import { Lexend } from "next/font/google";
+
+const lexend = Lexend({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+});
 
 export default function RootLayout({
   children,
@@ -10,7 +16,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
+      <body className={lexend.className}>
         <ThemeProvider>
           <Providers>
             <Navbar />

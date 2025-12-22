@@ -9,15 +9,16 @@ import {
 } from "@/lib/queries/queries";
 import BlockRow from "../../components/BlockRow";
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import useResizeWidth from "@/utils/useResizeWidth";
-import Address from "@/components/Address";
+import clsx from "clsx";
+import useIsDark from "@/utils/useIsDark";
 
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 15;
 
 export default function Block() {
   const queryClient = useQueryClient();
   const [page, setPage] = useState(1);
-
+  const [copy, setCopy] = useState(false);
+  const isDark = useIsDark();
   const { data: latestBlockNumber } = useQuery({
     queryKey: ["latestBlockNumber"],
     queryFn: fetchLatestBlockNumber,
@@ -59,24 +60,26 @@ export default function Block() {
     });
   }, [latestBlockNumber, page, queryClient]);
 
-  const {ref: minerRef, width:minerWidth} = useResizeWidth<HTMLDivElement>()
-
   return (
     <div className="px-2 sm:px-4">
-      <div className="w-full" ref={minerRef}>{minerWidth}</div>
       <TableHead
         columns={[
           { title: "Block", className: "w-3/12" },
           { title: "Time", className: "w-2/12" },
-          { title: "Miner", className: "w-6/12"},
-          { title: "Total Tx", className: "w-1/12" },
+          { title: "Miner", className: "w-5/12 lg:w-6/12" },
+          { title: "Total Tx", className: "w-2/12 lg:w-1/12 text-right " },
         ]}
       />
 
       {/* Skeleton */}
       {isListReady && (
-        <div className="flex justify-center px-2">
-          <div className="h-10 bg-gray-200 animate-pulse mb-2 rounded w-full max-w-6xl"></div>
+        <div className="flex flex-col items-center px-2">
+          {new Array(PAGE_SIZE).fill(0).map((_, index) => (
+            <div
+              key={index}
+              className="h-10 bg-gray-200 animate-pulse mb-2 rounded w-full max-w-6xl"
+            ></div>
+          ))}
         </div>
       )}
 
@@ -87,11 +90,13 @@ export default function Block() {
             <BlockRow
               blockRow={{
                 blockNo: block.number,
-                time: `${Math.floor(
-                  (Date.now() - block.timestamp) / 1000
-                )}s ago`,
+                time: block.timestamp,
                 miner: block.miner,
                 tx: block.txCount,
+              }}
+              onCopy={() => {
+                setCopy(true);
+                setTimeout(() => setCopy(false), 3000);
               }}
             />
           </div>
@@ -116,6 +121,18 @@ export default function Block() {
           <ArrowRight size={22} />
         </button>
       </div>
+      {copy && (
+        <div
+          className={clsx(
+            "fixed bottom-4 right-6 p-2 rounded-xl",
+            isDark ? "bg-slate-700" : "bg-slate-300"
+          )}
+        >
+          copied to clipboard
+        </div>
+      )}
+
+      <div className="flex justify-center">timetest 1766391348000</div>
     </div>
   );
 }

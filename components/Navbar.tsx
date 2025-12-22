@@ -12,7 +12,7 @@ export default function Navbar() {
   return (
     <nav
       className={clsx(
-        "border-b px-4 py-3",
+        "border-b px-4 py-3 mb-3",
         isDark ? "bg-gray-800 text-slate-200" : "bg-gray-200 text-slate-800"
       )}
     >
